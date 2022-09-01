@@ -11,12 +11,18 @@ const itemRouter = require('./routes/item')
 // init repositories and use cases
 const itemUC = new ItemUseCase(new ItemRepository())
 
+// inject use cases
+app.use((req,res,next) => {
+    req.itemUC = itemUC
+    next()
+})
+
 app.get('/', function (req, res) {
     res.send('Hello World')
 })
 
 // init routers
-app.use('/item', itemRouter(itemUC))
+app.use('/item', itemRouter)
 
 module.exports = app
 
