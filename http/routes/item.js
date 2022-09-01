@@ -1,6 +1,7 @@
 const express = require('express')
 
 const router = express.Router()
+
 router.get('/', async (req, res) =>{
     /*
         #swagger.summary = "Get List Product"
@@ -42,6 +43,20 @@ router.get('/:id', async (req, res) =>{
         return res.status(400).json(null)
     }
     res.json(item)
+})
+
+// delete item [unfinished]
+router.delete('/:id', async (req,res) => {
+    let id = req.params.id
+    let item = await req.itemUC.getProductByID(id)
+    if (item == null) {
+        return res.status(400).json(null)
+    }
+    res.json(item)
+})
+
+router.post('', async (req,res) => {
+    res.json(req.body)
 })
 
 

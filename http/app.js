@@ -11,6 +11,9 @@ const itemRouter = require('./routes/item')
 // init repositories and use cases
 const itemUC = new ItemUseCase(new ItemRepository())
 
+// json
+app.use(express.json())
+
 // inject use cases
 app.use((req,res,next) => {
     req.itemUC = itemUC
