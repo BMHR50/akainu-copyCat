@@ -18,11 +18,18 @@ app.use((req,res,next) => {
 })
 
 app.get('/', function (req, res) {
+    // #swagger.ignore = true
     res.send('Hello World')
 })
 
 // init routers
 app.use('/item', itemRouter)
+
+// documentation
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../docs/docs.json');
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 module.exports = app
 
