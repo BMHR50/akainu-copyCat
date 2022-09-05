@@ -2,8 +2,8 @@ const express = require('express')
 const app = express()
 
 // import repositories and use cases
-const ItemRepository = require('../repository/item')
-const ItemUseCase = require('../usecase/item')
+const ItemRepository = require('./repository/item')
+const ItemUseCase = require('./usecase/item')
 
 // import routers
 const itemRouter = require('./routes/item')
@@ -30,7 +30,7 @@ app.use('/item', itemRouter)
 
 // documentation
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('../docs/docs.json');
+const swaggerDocument = require('./docs/docs.json');
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
