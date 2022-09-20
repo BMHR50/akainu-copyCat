@@ -1,5 +1,5 @@
 module.exports = {
-    list: async (req, res) =>{
+    list: async (req, res) => {
         /*
             #swagger.summary = "Get List Product"
             #swagger.description = 'Get list product'
@@ -19,7 +19,7 @@ module.exports = {
         }
         res.json(items)
     },
-    getById: async (req, res) =>{
+    getById: async (req, res) => {
         /*
             #swagger.summary = "Get Product"
             #swagger.description = 'Get Product By ID'
@@ -40,15 +40,37 @@ module.exports = {
         }
         res.json(item)
     },
-    delete: async (req,res) => {
-        let id = req.params.id
-        let item = await req.itemUC.getProductByID(id)
-        if (item == null) {
-            return res.status(400).json(null)
+    delete: async (req, res) => {
+        let res_data = {
+            status: 'ok',
+            message: "",
+            data: null
         }
-        res.json(item)
+
+        let id = req.params.id
+        await req.itemUC.deleteItem(id)
+        res.json(res_data)
     },
-    create: async (req,res) => {
-        res.json(req.body)
+    create: async (req, res) => {
+        let res_data = {
+            status: 'failed',
+            message: "",
+            data: null
+        }
+
+        let item = {
+            name: req.body.name,
+            price: req.body.price,
+            category: req.body.category
+        }
+
+        item = await req.itemUC.createItem(item)
+        if (item == null) {
+            return res.status(400).json(res_data)
+        }
+
+        res_data.status = 'success'
+        res_data.data = item
+        res.json(res_data)
     }
 }

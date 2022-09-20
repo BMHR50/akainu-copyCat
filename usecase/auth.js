@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken')
+
 class Auth {
     constructor(userRepository) {
         this.userRepository = userRepository
@@ -20,14 +22,22 @@ class Auth {
     }
 
     generateAccessToken(user_data) {
+        let user = {
+            id: user_data.id,
+            name: user_data.name,
+            email: user_data.email,
+            address: user_data.address,
+        }
+        let payload = {
+            user: user,
+            is_admin: user_data.is_admin
+        }
+        let jwt_str = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: '15m'
+        })
         return {
-            user: {
-                id: user_data.id,
-                name: user_data.name,
-                email: user_data.email,
-                address: user_data.address,
-            },
-            access_token: ""
+            user: user,
+            access_token: jwt_str
         }
     }
 

@@ -10,6 +10,14 @@ class Item {
     async getProducts(filters) {
         return await this.itemRepository.getProducts(filters)
     }
+
+    async createItem(item) {
+        return await this.itemRepository.createItem(item)
+    }
+
+    async deleteItem(id) {
+        await this.itemRepository.deleteItem(id)
+    }
 }
 
 module.exports = Item;

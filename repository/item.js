@@ -29,6 +29,28 @@ class ItemRepository {
 
         return await this.ItemModel.findAll()
     }
+
+    async createItem(item_data) {
+        let item = null
+        try {
+            item = await Item.create(item_data)
+        } catch (e) {
+            console.error(e)
+        }
+        return item
+    }
+
+    async deleteItem(id) {
+        try {
+            await Item.destroy({
+                where: {
+                    id: id
+                }
+            })
+        } catch (e) {
+            console.error(e)
+        }
+    }
 }
 
 module.exports = ItemRepository
