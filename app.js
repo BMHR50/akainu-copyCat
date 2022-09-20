@@ -50,6 +50,7 @@ const AuthUseCase = require('./usecase/auth')
 const itemRouter = require('./routes/item')
 const authRouter = require('./routes/auth')
 const userRouter = require('./routes/user')
+const fileRouter = require('./routes/file')
 
 // init repositories and use cases
 const itemUC = new ItemUseCase(new ItemRepository())
@@ -83,6 +84,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 app.use('/item', itemRouter)
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
+app.use('/file', fileRouter)
 
 // documentation
 const swaggerUi = require('swagger-ui-express');

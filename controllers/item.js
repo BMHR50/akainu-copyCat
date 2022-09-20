@@ -61,7 +61,8 @@ module.exports = {
         let item = {
             name: req.body.name,
             price: req.body.price,
-            category: req.body.category
+            category: req.body.category,
+            img_url: req.body.img_url
         }
 
         item = await req.itemUC.createItem(item)
