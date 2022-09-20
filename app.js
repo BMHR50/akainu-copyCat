@@ -38,15 +38,21 @@ app.use(Sentry.Handlers.tracingHandler());
 
 const fs = require('fs')
 
-// import repositories and use cases
+// import repositories
 const ItemRepository = require('./repository/item')
+const UserRepository = require('./repository/user')
+
+// import use cases
 const ItemUseCase = require('./usecase/item')
+const AuthUseCase = require('./usecase/auth')
 
 // import routers
 const itemRouter = require('./routes/item')
+const authRouter = require('./routes/auth')
 
 // init repositories and use cases
 const itemUC = new ItemUseCase(new ItemRepository())
+const authUC = new AuthUseCase(new UserRepository())
 
 // json
 app.use(express.json())
@@ -58,6 +64,7 @@ app.use(logger('combined', {
 // inject use cases
 app.use((req,res,next) => {
     req.itemUC = itemUC
+    req.authUC = authUC
     next()
 })
 
@@ -73,6 +80,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 
 // init routers
 app.use('/item', itemRouter)
+app.use('/auth', authRouter)
 
 // documentation
 const swaggerUi = require('swagger-ui-express');
