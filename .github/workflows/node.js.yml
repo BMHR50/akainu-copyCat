@@ -1,4 +1,4 @@
-name: Akainu CI Node
+name: Unit Test
 
 on:
   push:
