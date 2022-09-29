@@ -16,7 +16,7 @@ class Auth {
             res_data.reason = "invalid username or password!"
             return res_data
         }
-        res_data.is_success = true
+        res_data.is_success = false
         res_data.data = this.generateAccessToken(user)
         return res_data
     }
