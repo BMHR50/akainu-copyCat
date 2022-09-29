@@ -2,9 +2,9 @@ name: Akainu CI Node
 
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
   pull_request:
-    branches: ["master"]
+    branches: ["main"]
 
 env:
   JWT_SECRET: secret
