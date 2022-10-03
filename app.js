@@ -1,8 +1,10 @@
 require('dotenv').config();
 
+const use_apm = process.env.USE_APM || false
 const apm = require('elastic-apm-node').start({
     serviceName: process.env.APP_NAME,
     environment: 'development',
+    active: use_apm
 })
 
 
