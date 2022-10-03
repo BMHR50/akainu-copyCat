@@ -61,8 +61,10 @@ const authUC = new AuthUseCase(new UserRepository())
 // json
 app.use(express.json())
 
+const LOG_FILE = process.env.LOG_FILE || './logs/access.log'
+
 app.use(logger('combined', {
-    stream: fs.createWriteStream('./logs/access.log', {flags: 'a'})
+    stream: fs.createWriteStream(LOG_FILE, {flags: 'a'})
 }))
 
 // inject use cases
