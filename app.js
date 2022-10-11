@@ -43,20 +43,24 @@ const fs = require('fs')
 // import repositories
 const ItemRepository = require('./repository/item')
 const UserRepository = require('./repository/user')
+const ChatRepository = require('./repository/chat')
 
 // import use cases
 const ItemUseCase = require('./usecase/item')
 const AuthUseCase = require('./usecase/auth')
+const ChatUseCase = require('./usecase/chat')
 
 // import routers
 const itemRouter = require('./routes/item')
 const authRouter = require('./routes/auth')
 const userRouter = require('./routes/user')
 const fileRouter = require('./routes/file')
+const chatRouter = require('./routes/chat')
 
 // init repositories and use cases
 const itemUC = new ItemUseCase(new ItemRepository())
 const authUC = new AuthUseCase(new UserRepository())
+const chatUC = new ChatUseCase(new ChatRepository())
 
 // json
 app.use(express.json())
@@ -71,6 +75,7 @@ app.use(logger('combined', {
 app.use((req,res,next) => {
     req.itemUC = itemUC
     req.authUC = authUC
+    req.chatUC = chatUC
     next()
 })
 
@@ -89,6 +94,7 @@ app.use('/item', itemRouter)
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
 app.use('/file', fileRouter)
+app.use('/chat', chatRouter)
 
 // documentation
 const swaggerUi = require('swagger-ui-express');
