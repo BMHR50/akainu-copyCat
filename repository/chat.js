@@ -26,6 +26,19 @@ class ChatRepository {
         }
         return results
     }
+
+    async insertChat(chat_data) {
+        let result = null
+
+        try {
+            result = await this.Model.create(chat_data)
+        } catch (e) {
+            console.error(e)
+            return null
+        }
+
+        return result
+    }
 }
 
 module.exports = ChatRepository

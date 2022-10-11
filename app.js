@@ -9,6 +9,8 @@ const apm = require('elastic-apm-node').start({
 
 
 const express = require('express')
+const socketIO = require('socket.io')
+const http = require('http')
 const Sentry = require('@sentry/node');
 const Tracing = require('@sentry/tracing');
 
@@ -113,5 +115,37 @@ app.use(function onError(err, req, res, next) {
     res.end(res.sentry + "\n");
 });
 
-module.exports = app
+const httpServer = http.createServer(app)
+// init socket io
+// import authorization middleware
+const authorize_ws = require('./middlewares/socket_io')
+const io = socketIO(httpServer)
+
+io.use(authorize_ws)
+io.on('connection', (socket) => {
+    let user_id = socket.handshake.auth.user.id
+    let room = `room_${user_id}`
+    socket.join(room)
+
+    socket.on('sendChat', async (chat_data) => {
+        // TODO: insert to database
+        let recipient = chat_data.recipient_id
+        chat_data.sender_id = user_id
+
+        let result = await chatUC.insertChat(chat_data)
+        if(result !== null) {
+            socket.emit('onNewChat',result) // kirim ke diri sendiri
+            socket.to(`room_${recipient}`).emit('onNewChat', {
+                ...result,
+                is_sender: false
+            }) // kirim ke tujuan
+        }
+    })
+
+    socket.on('disconnect', () => {
+        console.log(`user disconnected`)
+    })
+})
+
+module.exports = httpServer
 
