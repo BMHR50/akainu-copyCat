@@ -21,9 +21,9 @@ const opt = {
     dsn: process.env.SENTRY_DSN,
     integrations: [
         // enable HTTP calls tracing
-        new Sentry.Integrations.Http({ tracing: true }),
+        new Sentry.Integrations.Http({tracing: true}),
         // enable Express.js middleware tracing
-        new Tracing.Integrations.Express({ app }),
+        new Tracing.Integrations.Express({app}),
     ],
 
     // Set tracesSampleRate to 1.0 to capture 100%
@@ -46,11 +46,14 @@ const fs = require('fs')
 const ItemRepository = require('./repository/item')
 const UserRepository = require('./repository/user')
 const ChatRepository = require('./repository/chat')
+const OTPRepository = require('./repository/otp')
+const EmailRepository = require('./repository/email')
 
 // import use cases
 const ItemUseCase = require('./usecase/item')
 const AuthUseCase = require('./usecase/auth')
 const ChatUseCase = require('./usecase/chat')
+const OtpUseCase = require('./usecase/otp')
 
 // import routers
 const itemRouter = require('./routes/item')
@@ -58,11 +61,13 @@ const authRouter = require('./routes/auth')
 const userRouter = require('./routes/user')
 const fileRouter = require('./routes/file')
 const chatRouter = require('./routes/chat')
+const otpRouter = require('./routes/otp')
 
 // init repositories and use cases
 const itemUC = new ItemUseCase(new ItemRepository())
 const authUC = new AuthUseCase(new UserRepository())
 const chatUC = new ChatUseCase(new ChatRepository())
+const otpUC = new OtpUseCase(new OTPRepository(), new EmailRepository())
 
 // json
 app.use(express.json())
@@ -74,10 +79,11 @@ app.use(logger('combined', {
 }))
 
 // inject use cases
-app.use((req,res,next) => {
+app.use((req, res, next) => {
     req.itemUC = itemUC
     req.authUC = authUC
     req.chatUC = chatUC
+    req.otpUC = otpUC
     next()
 })
 
@@ -97,6 +103,7 @@ app.use('/auth', authRouter)
 app.use('/user', userRouter)
 app.use('/file', fileRouter)
 app.use('/chat', chatRouter)
+app.use('/otp', otpRouter)
 
 // documentation
 const swaggerUi = require('swagger-ui-express');
@@ -133,8 +140,8 @@ io.on('connection', (socket) => {
         chat_data.sender_id = user_id
 
         let result = await chatUC.insertChat(chat_data)
-        if(result !== null) {
-            socket.emit('onNewChat',result) // kirim ke diri sendiri
+        if (result !== null) {
+            socket.emit('onNewChat', result) // kirim ke diri sendiri
             socket.to(`room_${recipient}`).emit('onNewChat', {
                 ...result,
                 is_sender: false
